@@ -1,0 +1,65 @@
+import { prisma } from '@config/prisma.config';
+import { Prisma } from '@prisma/client';
+
+export class AuthRepository {
+  async findUserByEmail(email: string) {
+    return prisma.user.findUnique({
+      where: { email },
+      include: { company: true, role: true }
+    });
+  }
+
+  async findUserById(id: string) {
+    return prisma.user.findUnique({
+      where: { id },
+      include: { company: true, role: true }
+    });
+  }
+
+  async findUserByRefreshToken(refreshToken: string) {
+    return prisma.user.findUnique({
+      where: { refreshToken },
+      include: { company: true, role: true }
+    });
+  }
+
+  async findUserByResetToken(token: string) {
+    return prisma.user.findFirst({
+      where: {
+        resetPasswordToken: token,
+        resetPasswordExpire: { gt: new Date() }
+      }
+    });
+  }
+
+  async createUser(data: Prisma.UserCreateInput) {
+    return prisma.user.create({ data, include: { company: true } });
+  }
+
+  async updateUser(id: string, data: Prisma.UserUpdateInput) {
+    return prisma.user.update({ where: { id }, data });
+  }
+
+  async createCompanyWithAdmin(companyData: any, userData: any, roleData: any) {
+    return prisma.$transaction(async (tx) => {
+      const company = await tx.company.create({ data: companyData });
+      const role = await tx.role.create({
+        data: {
+          ...roleData,
+          companyId: company.id
+        }
+      });
+      const user = await tx.user.create({
+        data: {
+          ...userData,
+          companyId: company.id,
+          roleId: role.id
+        },
+        include: { company: true, role: true }
+      });
+      return { user, company };
+    });
+  }
+}
+
+export const authRepository = new AuthRepository();
