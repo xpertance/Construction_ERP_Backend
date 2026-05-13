@@ -6,6 +6,8 @@ export const createInventoryItemSchema = z.object({
   sku: z.string().optional(),
   description: z.string().optional(),
   unit: z.string().min(1),
+  category: z.string().optional(),
+  minStock: z.number().optional().default(0),
 });
 
 export const updateInventoryItemSchema = z.object({
@@ -13,6 +15,8 @@ export const updateInventoryItemSchema = z.object({
   sku: z.string().optional(),
   description: z.string().optional(),
   unit: z.string().min(1).optional(),
+  category: z.string().optional(),
+  minStock: z.number().optional(),
 });
 
 // Warehouse Schemas
@@ -29,6 +33,7 @@ export const stockMovementSchema = z.object({
   type: z.enum(['IN', 'OUT', 'TRANSFER']),
   reference: z.string().optional(),
   notes: z.string().optional(),
+  projectId: z.string().uuid().optional(),
 });
 
 export type CreateInventoryItemDTO = z.infer<typeof createInventoryItemSchema>;

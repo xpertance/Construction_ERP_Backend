@@ -31,6 +31,26 @@ router.post('/register', authController.register);
 
 /**
  * @swagger
+ * /api/v1/auth/register-superadmin:
+ *   post:
+ *     summary: Register the primary superadmin for the platform
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterInput'
+ *     responses:
+ *       201:
+ *         description: Superadmin registered successfully
+ *       403:
+ *         description: A Superadmin account already exists
+ */
+router.post('/register-superadmin', authController.registerSuperadmin);
+
+/**
+ * @swagger
  * /api/v1/auth/login:
  *   post:
  *     summary: Login user
@@ -114,5 +134,6 @@ router.post('/forgot-password', authController.forgotPassword);
  *         description: Password reset successful
  */
 router.post('/reset-password', authController.resetPassword);
+
 
 export default router;

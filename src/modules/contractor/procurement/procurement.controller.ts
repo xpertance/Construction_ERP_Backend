@@ -73,6 +73,15 @@ export class ProcurementController {
     }
   };
 
+  rejectRequest = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = await this.service.rejectRequest(req.params.id as string, req.user!.company_id);
+      sendResponse(res, 200, 'Procurement request rejected successfully', data);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   // --- Purchase Order Handlers ---
 
   getAllPurchaseOrders = async (req: Request, res: Response, next: NextFunction) => {
@@ -108,6 +117,46 @@ export class ProcurementController {
     try {
       await this.service.deletePurchaseOrder(req.params.id as string, req.user!.company_id);
       sendResponse(res, 200, 'Purchase order deleted successfully');
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  receivePurchaseOrder = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { warehouseId } = req.body;
+      if (!warehouseId) throw new Error('Warehouse ID is required to receive goods');
+      const data = await this.service.receivePurchaseOrder(req.params.id as string, req.user!.company_id, warehouseId);
+      sendResponse(res, 200, 'Purchase order goods received and inventory updated successfully', data);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // --- Vendor Handlers ---
+
+  getAllVendors = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = await this.service.getAllVendors(req.user!.company_id);
+      sendResponse(res, 200, 'Vendors fetched successfully', data);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  createVendor = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = await this.service.createVendor(req.user!.company_id, req.body);
+      sendResponse(res, 201, 'Vendor created successfully', data);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  deleteVendor = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await this.service.deleteVendor(req.params.id as string, req.user!.company_id);
+      sendResponse(res, 200, 'Vendor deleted successfully');
     } catch (error) {
       next(error);
     }

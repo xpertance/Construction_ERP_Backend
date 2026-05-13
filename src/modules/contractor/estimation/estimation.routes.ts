@@ -92,6 +92,7 @@ router.post('/', authMiddleware, contractorGuard, allowPermissions('estimations.
  *         description: Estimation deleted
  */
 router.delete('/:id', authMiddleware, contractorGuard, allowPermissions('estimations.delete'), controller.deleteEstimation);
+router.patch('/:id', authMiddleware, contractorGuard, allowPermissions('estimations.create'), controller.updateEstimation);
 
 /**
  * @swagger
@@ -191,6 +192,38 @@ router.post('/:id/approve', authMiddleware, contractorGuard, allowPermissions('e
 
 /**
  * @swagger
+ * /api/v1/contractor/estimations/{id}/request-approval:
+ *   post:
+ *     summary: Request approval for the current version
+ *     tags: [Contractor Estimations]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [designatedApproverId]
+ *             properties:
+ *               designatedApproverId:
+ *                 type: string
+ *                 format: uuid
+ *               notes:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Approval requested
+ */
+router.post('/:id/request-approval', authMiddleware, contractorGuard, allowPermissions('estimations.update'), controller.requestApproval);
+
+/**
+ * @swagger
  * /api/v1/contractor/estimations/{id}/versions:
  *   get:
  *     summary: Get all versions of an estimation
@@ -226,5 +259,9 @@ router.get('/:id/versions', authMiddleware, contractorGuard, allowPermissions('e
  *         description: New version created
  */
 router.post('/:id/new-version', authMiddleware, contractorGuard, allowPermissions('estimations.update'), controller.createNewVersion);
+
+router.post('/:id/push-to-procurement', authMiddleware, contractorGuard, allowPermissions('estimations.update'), controller.pushToProcurement);
+
+router.get('/:id/check-inventory', authMiddleware, contractorGuard, allowPermissions('estimations.view'), controller.checkInventory);
 
 export default router;

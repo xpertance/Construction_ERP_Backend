@@ -66,7 +66,7 @@ export class FinanceService {
       type: 'INCOME',
       category: 'INVOICE_PAYMENT',
       amount: data.amount,
-      description: `Payment received for Invoice ${data.invoiceId || 'N/A'}`,
+      description: `Payment received for Invoice ${data.invoiceId || 'N/A'}${data.notes ? ` (${data.notes})` : ''}`,
       date: data.paymentDate,
     });
 

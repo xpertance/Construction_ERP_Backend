@@ -23,7 +23,8 @@ export const errorHandler = (
 
   if (err.name === 'ZodError') {
     statusCode = 400;
-    message = err.errors.map((e: any) => `${e.path.join('.')}: ${e.message}`).join(', ');
+    const errors = err.errors || err.issues || [];
+    message = errors.map((e: any) => `${e.path?.join('.') || 'Field'}: ${e.message}`).join(', ') || 'Validation error';
   }
 
   logger.error(`${statusCode} - ${message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);

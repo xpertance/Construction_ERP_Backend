@@ -24,6 +24,11 @@ export class EstimationService {
     return this.estimationRepository.create({ ...data, companyId });
   }
 
+  async updateEstimation(id: string, companyId: string, data: { title: string; description?: string }) {
+    await this.getEstimationById(id, companyId);
+    return this.estimationRepository.update(id, companyId, data);
+  }
+
   async deleteEstimation(id: string, companyId: string) {
     await this.getEstimationById(id, companyId);
     return this.estimationRepository.delete(id, companyId);
@@ -33,8 +38,8 @@ export class EstimationService {
     const estimation = await this.getEstimationById(estimationId, companyId);
     const latestVersion = estimation.versions[0];
     
-    if (latestVersion.status !== 'DRAFT') {
-      throw new Error('Cannot add items to a non-draft estimation. Please create a new version.');
+    if (latestVersion.status !== 'DRAFT' && latestVersion.status !== 'PENDING_APPROVAL') {
+      throw new Error('Cannot add items to this estimation version. Please create a new version.');
     }
 
     const item = await this.estimationRepository.addItem(latestVersion.id, data);
@@ -50,8 +55,8 @@ export class EstimationService {
     const item = latestVersion.items.find(i => i.id === itemId);
     if (!item) throw new Error('Item not found in the current version of this estimation');
 
-    if (latestVersion.status !== 'DRAFT') {
-      throw new Error('Cannot update items in a non-draft estimation.');
+    if (latestVersion.status !== 'DRAFT' && latestVersion.status !== 'PENDING_APPROVAL') {
+      throw new Error('Cannot update items in this estimation version.');
     }
 
     const updatedItem = await this.estimationRepository.updateItem(itemId, data);
@@ -66,15 +71,30 @@ export class EstimationService {
     const item = latestVersion.items.find(i => i.id === itemId);
     if (!item) throw new Error('Item not found in the current version of this estimation');
 
-    if (latestVersion.status !== 'DRAFT') {
-      throw new Error('Cannot delete items from a non-draft estimation.');
+    if (latestVersion.status !== 'DRAFT' && latestVersion.status !== 'PENDING_APPROVAL') {
+      throw new Error('Cannot delete items from this estimation version.');
     }
 
     await this.estimationRepository.removeItem(itemId);
     await this.estimationRepository.recalculateTotal(latestVersion.id);
   }
 
-  async approveEstimation(id: string, companyId: string) {
+  async requestApproval(id: string, companyId: string, requestedById: string, designatedApproverId: string, notes?: string) {
+    const estimation = await this.getEstimationById(id, companyId);
+    const latestVersion = estimation.versions[0];
+
+    if (latestVersion.status !== 'DRAFT') {
+      throw new Error('Only DRAFT estimations can be sent for approval');
+    }
+
+    return this.estimationRepository.updateVersionStatus(latestVersion.id, 'PENDING_APPROVAL', {
+      requestedById,
+      designatedApproverId,
+      approvalNotes: notes
+    });
+  }
+
+  async approveEstimation(id: string, companyId: string, userId: string, isSuperadmin: boolean) {
     const estimation = await this.getEstimationById(id, companyId);
     const latestVersion = estimation.versions[0];
 
@@ -82,7 +102,15 @@ export class EstimationService {
       throw new Error('Estimation is already approved');
     }
 
-    await this.estimationRepository.updateVersionStatus(latestVersion.id, 'APPROVED');
+    // Check authorization: only designated approver or superadmin can approve
+    if (latestVersion.designatedApproverId && latestVersion.designatedApproverId !== userId && !isSuperadmin) {
+      throw new Error('You are not authorized to approve this estimation. Only the designated approver or a Superadmin can approve it.');
+    }
+
+    await this.estimationRepository.updateVersionStatus(latestVersion.id, 'APPROVED', {
+      approvedById: userId,
+      approvalDate: new Date()
+    });
     return this.estimationRepository.approve(id, companyId);
   }
 
@@ -98,11 +126,31 @@ export class EstimationService {
     const newVersion = await this.estimationRepository.createNewVersion(
       id,
       latestVersion.id,
-      estimation.currentVersion + 1
+      latestVersion.versionNumber + 1
     );
 
     // Update the main estimation's current version index
     // Note: In a real app, you might want to track this more formally.
     return newVersion;
+  }
+
+  async pushToProcurement(id: string, versionId: string, companyId: string, userId: string) {
+    const estimation = await this.getEstimationById(id, companyId);
+    const version = estimation.versions.find(v => v.id === versionId);
+    if (!version) throw new Error('Version not found');
+
+    if (version.status !== 'APPROVED') {
+      throw new Error('Only approved estimation versions can be pushed to procurement');
+    }
+
+    return this.estimationRepository.createProcurementFromVersion(version, companyId, userId, estimation.projectId);
+  }
+
+  async checkInventoryForVersion(id: string, versionId: string, companyId: string) {
+    const estimation = await this.getEstimationById(id, companyId);
+    const version = estimation.versions.find(v => v.id === versionId);
+    if (!version) throw new Error('Version not found');
+
+    return this.estimationRepository.checkInventoryForVersion(version, companyId);
   }
 }

@@ -7,6 +7,7 @@ export const createEstimationSchema = z.object({
 });
 
 export const addEstimationItemSchema = z.object({
+  inventoryItemId: z.string().uuid().optional(),
   description: z.string().min(1),
   quantity: z.number().positive(),
   unit: z.string().min(1),
@@ -14,6 +15,7 @@ export const addEstimationItemSchema = z.object({
 });
 
 export const updateEstimationItemSchema = z.object({
+  inventoryItemId: z.string().uuid().optional().nullable(),
   description: z.string().min(1).optional(),
   quantity: z.number().positive().optional(),
   unit: z.string().min(1).optional(),

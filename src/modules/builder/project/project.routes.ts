@@ -31,6 +31,27 @@ router.get('/', authMiddleware, builderGuard, allowPermissions('projects.view'),
 
 /**
  * @swagger
+ * /api/v1/builder/projects/leads:
+ *   get:
+ */
+router.get('/leads', authMiddleware, builderGuard, allowPermissions('projects.view'), controller.getLeads);
+
+/**
+ * @swagger
+ * /api/v1/builder/projects/leads:
+ *   post:
+ */
+router.post('/leads', authMiddleware, builderGuard, allowPermissions('projects.update'), controller.createLead);
+
+/**
+ * @swagger
+ * /api/v1/builder/projects/bookings:
+ *   post:
+ */
+router.post('/bookings', authMiddleware, builderGuard, allowPermissions('projects.update'), controller.createBooking);
+
+/**
+ * @swagger
  * /api/v1/builder/projects/{id}:
  *   get:
  *     summary: Get builder project by ID
@@ -146,20 +167,19 @@ router.get('/:id/units', authMiddleware, builderGuard, allowPermissions('project
 
 /**
  * @swagger
- * /api/v1/builder/projects/{id}/bookings:
- *   get:
- *     summary: Get all bookings for this project
+ * /api/v1/builder/projects/{id}/units:
+ *   post:
+ *     summary: Add a new unit to the project
  *     tags: [Builder Projects]
- *     security: [{ bearerAuth: [] }]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: string, format: uuid }
- *     responses:
- *       200:
- *         description: List of bookings
  */
+router.post('/:id/units', authMiddleware, builderGuard, allowPermissions('projects.update'), controller.createUnit);
+
 router.get('/:id/bookings', authMiddleware, builderGuard, allowPermissions('projects.view'), controller.getBookings);
+
+// --- Isolated Construction / WBS Routes ---
+router.get('/:id/tasks', authMiddleware, builderGuard, allowPermissions('projects.view'), controller.getTasks);
+router.post('/:id/tasks', authMiddleware, builderGuard, allowPermissions('projects.update'), controller.createTask);
+router.patch('/tasks/:taskId', authMiddleware, builderGuard, allowPermissions('projects.update'), controller.updateTask);
+router.delete('/tasks/:taskId', authMiddleware, builderGuard, allowPermissions('projects.update'), controller.deleteTask);
 
 export default router;

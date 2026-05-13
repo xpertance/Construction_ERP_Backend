@@ -111,7 +111,7 @@ router.post('/requests', authMiddleware, contractorGuard, allowPermissions('proc
  *       200:
  *         description: Request updated
  */
-router.patch('/requests/:id', authMiddleware, contractorGuard, allowPermissions('procurement.update'), controller.updateRequest);
+router.patch('/requests/:id', authMiddleware, contractorGuard, allowPermissions(['procurement.create', 'procurement.approve']), controller.updateRequest);
 
 /**
  * @swagger
@@ -130,7 +130,7 @@ router.patch('/requests/:id', authMiddleware, contractorGuard, allowPermissions(
  *       200:
  *         description: Request deleted
  */
-router.delete('/requests/:id', authMiddleware, contractorGuard, allowPermissions('procurement.delete'), controller.deleteRequest);
+router.delete('/requests/:id', authMiddleware, contractorGuard, allowPermissions(['procurement.create', 'procurement.approve']), controller.deleteRequest);
 
 /**
  * @swagger
@@ -150,6 +150,7 @@ router.delete('/requests/:id', authMiddleware, contractorGuard, allowPermissions
  *         description: Request approved
  */
 router.post('/requests/:id/approve', authMiddleware, contractorGuard, allowPermissions('procurement.approve'), controller.approveRequest);
+router.post('/requests/:id/reject', authMiddleware, contractorGuard, allowPermissions('procurement.approve'), controller.rejectRequest);
 
 
 // --- Purchase Orders ---
@@ -166,7 +167,7 @@ router.post('/requests/:id/approve', authMiddleware, contractorGuard, allowPermi
  *       200:
  *         description: List of purchase orders
  */
-router.get('/purchase-orders', authMiddleware, contractorGuard, allowPermissions('procurement.po.view'), controller.getAllPurchaseOrders);
+router.get('/purchase-orders', authMiddleware, contractorGuard, allowPermissions(['procurement.view', 'procurement.approve']), controller.getAllPurchaseOrders);
 
 /**
  * @swagger
@@ -200,7 +201,7 @@ router.get('/purchase-orders', authMiddleware, contractorGuard, allowPermissions
  *       201:
  *         description: Purchase order created
  */
-router.post('/purchase-orders', authMiddleware, contractorGuard, allowPermissions('procurement.po.create'), controller.createPurchaseOrder);
+router.post('/purchase-orders', authMiddleware, contractorGuard, allowPermissions(['procurement.create', 'procurement.approve']), controller.createPurchaseOrder);
 
 /**
  * @swagger
@@ -227,7 +228,7 @@ router.post('/purchase-orders', authMiddleware, contractorGuard, allowPermission
  *       200:
  *         description: Purchase order updated
  */
-router.patch('/purchase-orders/:id', authMiddleware, contractorGuard, allowPermissions('procurement.po.update'), controller.updatePurchaseOrder);
+router.patch('/purchase-orders/:id', authMiddleware, contractorGuard, allowPermissions(['procurement.create', 'procurement.approve']), controller.updatePurchaseOrder);
 
 /**
  * @swagger
@@ -246,6 +247,13 @@ router.patch('/purchase-orders/:id', authMiddleware, contractorGuard, allowPermi
  *       200:
  *         description: Purchase order deleted
  */
-router.delete('/purchase-orders/:id', authMiddleware, contractorGuard, allowPermissions('procurement.po.delete'), controller.deletePurchaseOrder);
+router.delete('/purchase-orders/:id', authMiddleware, contractorGuard, allowPermissions(['procurement.create', 'procurement.approve']), controller.deletePurchaseOrder);
+
+router.post('/purchase-orders/:id/receive', authMiddleware, contractorGuard, allowPermissions(['procurement.create', 'procurement.approve']), controller.receivePurchaseOrder);
+
+// --- Vendors ---
+router.get('/vendors', authMiddleware, contractorGuard, allowPermissions('procurement.view'), controller.getAllVendors);
+router.post('/vendors', authMiddleware, contractorGuard, allowPermissions('procurement.create'), controller.createVendor);
+router.delete('/vendors/:id', authMiddleware, contractorGuard, allowPermissions('procurement.create'), controller.deleteVendor);
 
 export default router;

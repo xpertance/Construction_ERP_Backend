@@ -17,7 +17,7 @@ app.use(cors());
 // ─── Rate Limiting ──────────────────────────────────────────────────────────
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,                  // max requests per window per IP
+  max: 1000,                 // max requests per window per IP (increased for ERP multi-endpoint pages)
   standardHeaders: true,
   legacyHeaders: false,
 });

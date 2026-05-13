@@ -100,9 +100,11 @@ export class FinanceRepository {
   }
 
   async createPayment(data: CreatePaymentDTO & { companyId: string, transactionId?: string }) {
+    const { paymentMethod, notes, ...rest } = data;
     return (prisma as any).payment.create({
       data: {
-        ...data,
+        ...rest,
+        method: paymentMethod,
         paymentDate: data.paymentDate ? new Date(data.paymentDate) : new Date(),
         transactionId: data.transactionId
       }

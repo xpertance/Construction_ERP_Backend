@@ -9,6 +9,12 @@ export class AuthRepository {
     });
   }
 
+  async findSuperAdmin() {
+    return prisma.user.findFirst({
+      where: { role: { name: 'SUPERADMIN' } }
+    });
+  }
+
   async findUserById(id: string) {
     return prisma.user.findUnique({
       where: { id },
@@ -58,6 +64,22 @@ export class AuthRepository {
         include: { company: true, role: true }
       });
       return { user, company };
+    });
+  }
+
+  async createIndependentSuperadmin(userData: any, roleData: any) {
+    return prisma.$transaction(async (tx) => {
+      const role = await tx.role.create({
+        data: roleData
+      });
+      const user = await tx.user.create({
+        data: {
+          ...userData,
+          roleId: role.id
+        },
+        include: { role: true }
+      });
+      return { user };
     });
   }
 }

@@ -3,6 +3,7 @@ import { sendResponse } from '@utils/response.util';
 import { authService } from './auth.service';
 import { 
   registerDTOSchema, 
+  registerSuperadminDTOSchema,
   loginDTOSchema, 
   refreshTokenDTOSchema, 
   forgotPasswordDTOSchema, 
@@ -14,6 +15,16 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     const data = registerDTOSchema.parse(req.body);
     const result = await authService.register(data);
     sendResponse(res, 201, 'User registered successfully', result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const registerSuperadmin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = registerSuperadminDTOSchema.parse(req.body);
+    const result = await authService.registerSuperadmin(data);
+    sendResponse(res, 201, 'Superadmin registered successfully', result);
   } catch (error) {
     next(error);
   }

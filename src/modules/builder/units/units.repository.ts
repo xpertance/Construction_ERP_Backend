@@ -42,7 +42,7 @@ export class UnitsRepository {
 
   async updateStatus(id: string, data: UpdateUnitStatusDTO & { fromStatus: string, changedById: string }) {
     const { status, fromStatus, changedById, notes } = data;
-    
+
     return (prisma as any).$transaction([
       (prisma as any).unit.update({
         where: { id },

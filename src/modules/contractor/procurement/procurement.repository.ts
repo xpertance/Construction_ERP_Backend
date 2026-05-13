@@ -69,6 +69,15 @@ export class ProcurementRepository {
     });
   }
 
+  async rejectRequest(id: string, companyId: string) {
+    return (prisma as any).procurementRequest.updateMany({
+      where: { id, companyId },
+      data: {
+        status: 'REJECTED'
+      }
+    });
+  }
+
   // --- Purchase Order Repos ---
 
   async findAllPurchaseOrders(companyId: string) {
@@ -122,6 +131,27 @@ export class ProcurementRepository {
       where: { companyId },
       orderBy: { createdAt: 'desc' },
       select: { poNumber: true }
+    });
+  }
+
+  // --- Vendor Repos ---
+
+  async findAllVendors(companyId: string) {
+    return (prisma as any).vendor.findMany({
+      where: { companyId },
+      orderBy: { createdAt: 'desc' }
+    });
+  }
+
+  async createVendor(data: { companyId: string; name: string; email?: string; phone?: string; address?: string }) {
+    return (prisma as any).vendor.create({
+      data
+    });
+  }
+
+  async deleteVendor(id: string, companyId: string) {
+    return (prisma as any).vendor.deleteMany({
+      where: { id, companyId }
     });
   }
 }
