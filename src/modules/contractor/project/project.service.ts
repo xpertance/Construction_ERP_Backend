@@ -8,12 +8,12 @@ export class ProjectService {
     this.projectRepository = new ProjectRepository();
   }
 
-  async getAllProjects(companyId: string) {
-    return this.projectRepository.findAll(companyId);
+  async getAllProjects(companyId: string, user?: any) {
+    return this.projectRepository.findAll(companyId, user);
   }
 
-  async getProjectById(id: string, companyId: string) {
-    const project = await this.projectRepository.findById(id, companyId);
+  async getProjectById(id: string, companyId: string, user?: any) {
+    const project = await this.projectRepository.findById(id, companyId, user);
     if (!project) {
       throw new Error('Project not found');
     }
@@ -57,9 +57,9 @@ export class ProjectService {
     return this.projectRepository.getProgress(id);
   }
 
-  async getDashboardData(companyId: string) {
-    const stats = await this.projectRepository.getStats(companyId);
-    const recentProjects = await this.projectRepository.findAll(companyId);
+  async getDashboardData(companyId: string, user?: any) {
+    const stats = await this.projectRepository.getStats(companyId, user);
+    const recentProjects = await this.projectRepository.findAll(companyId, user);
 
     return {
       stats,

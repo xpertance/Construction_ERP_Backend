@@ -31,8 +31,24 @@ export class InventoryRepository {
   }
 
   async deleteItem(id: string, companyId: string) {
-    return (prisma as any).inventoryItem.deleteMany({
-      where: { id, companyId }
+    return prisma.$transaction(async (tx) => {
+      // 1. Delete associated stocks
+      await (tx as any).stock.deleteMany({
+        where: { inventoryItemId: id, companyId }
+      });
+      // 2. Delete associated stock movements
+      await (tx as any).stockMovement.deleteMany({
+        where: { inventoryItemId: id, companyId }
+      });
+      // 3. Delete associated estimation items link
+      await (tx as any).estimationItem.updateMany({
+        where: { inventoryItemId: id },
+        data: { inventoryItemId: null }
+      });
+      // 4. Delete the item itself
+      return (tx as any).inventoryItem.deleteMany({
+        where: { id, companyId }
+      });
     });
   }
 
@@ -99,4 +115,17 @@ export class InventoryRepository {
       data
     });
   }
+
+  async findAllMovements(companyId: string) {
+    return (prisma as any).stockMovement.findMany({
+      where: { companyId },
+      include: {
+        inventoryItem: true,
+        warehouse: true,
+        project: true
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+  }
 }
+

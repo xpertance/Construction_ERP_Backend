@@ -1,0 +1,1 @@
+export { CompanyStatus } from '@prisma/client';

@@ -70,7 +70,11 @@ export class BillingRepository {
     return (prisma as any).builderPayment.findMany({
       where: { companyId },
       include: {
-        booking: { select: { clientName: true } },
+        booking: {
+          include: {
+            customer: { select: { name: true } }
+          }
+        },
         invoice: { select: { invoiceNumber: true } }
       },
       orderBy: { paymentDate: 'desc' }
@@ -127,7 +131,11 @@ export class BillingRepository {
         dueAmount: { gt: 0 }
       },
       include: {
-        booking: { select: { clientName: true, clientPhone: true } }
+        booking: {
+          include: {
+            customer: { select: { name: true, phone: true } }
+          }
+        }
       },
       orderBy: { dueDate: 'asc' }
     });

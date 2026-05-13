@@ -12,7 +12,7 @@ export class ProjectController {
 
   getAllProjects = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const projects = await this.projectService.getAllProjects(req.user!.company_id);
+      const projects = await this.projectService.getAllProjects(req.user!.company_id, req.user);
       sendResponse(res, 200, 'Projects fetched successfully', projects);
     } catch (error) {
       next(error);
@@ -21,7 +21,7 @@ export class ProjectController {
 
   getProjectById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const project = await this.projectService.getProjectById(req.params.id as string, req.user!.company_id);
+      const project = await this.projectService.getProjectById(req.params.id as string, req.user!.company_id, req.user);
       sendResponse(res, 200, 'Project fetched successfully', project);
     } catch (error) {
       next(error);
@@ -101,7 +101,7 @@ export class ProjectController {
 
   getDashboardData = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dashboard = await this.projectService.getDashboardData(req.user!.company_id);
+      const dashboard = await this.projectService.getDashboardData(req.user!.company_id, req.user);
       sendResponse(res, 200, 'Dashboard data fetched successfully', dashboard);
     } catch (error) {
       next(error);

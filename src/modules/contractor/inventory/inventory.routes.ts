@@ -29,7 +29,7 @@ const contractorGuard = checkERPType(['CONTRACTOR', 'BUILDER']);
  *       200:
  *         description: List of items
  */
-router.get('/items', authMiddleware, contractorGuard, allowPermissions('inventory.items.view'), controller.getAllItems);
+router.get('/items', authMiddleware, contractorGuard, allowPermissions(['inventory.view', 'inventory.manage']), controller.getAllItems);
 
 /**
  * @swagger
@@ -54,7 +54,7 @@ router.get('/items', authMiddleware, contractorGuard, allowPermissions('inventor
  *       201:
  *         description: Item created
  */
-router.post('/items', authMiddleware, contractorGuard, allowPermissions('inventory.items.create'), controller.createItem);
+router.post('/items', authMiddleware, contractorGuard, allowPermissions('inventory.manage'), controller.createItem);
 
 /**
  * @swagger
@@ -72,7 +72,7 @@ router.post('/items', authMiddleware, contractorGuard, allowPermissions('invento
  *       200:
  *         description: Item updated
  */
-router.patch('/items/:id', authMiddleware, contractorGuard, allowPermissions('inventory.items.update'), controller.updateItem);
+router.patch('/items/:id', authMiddleware, contractorGuard, allowPermissions('inventory.manage'), controller.updateItem);
 
 /**
  * @swagger
@@ -90,7 +90,7 @@ router.patch('/items/:id', authMiddleware, contractorGuard, allowPermissions('in
  *       200:
  *         description: Item deleted
  */
-router.delete('/items/:id', authMiddleware, contractorGuard, allowPermissions('inventory.items.delete'), controller.deleteItem);
+router.delete('/items/:id', authMiddleware, contractorGuard, allowPermissions('inventory.manage'), controller.deleteItem);
 
 
 // --- Stock & Movement ---
@@ -106,7 +106,8 @@ router.delete('/items/:id', authMiddleware, contractorGuard, allowPermissions('i
  *       200:
  *         description: Stock levels
  */
-router.get('/stock', authMiddleware, contractorGuard, allowPermissions('inventory.stock.view'), controller.getStock);
+router.get('/stock', authMiddleware, contractorGuard, allowPermissions(['inventory.view', 'inventory.manage']), controller.getStock);
+router.get('/stock/movements', authMiddleware, contractorGuard, allowPermissions(['inventory.view', 'inventory.manage']), controller.getMovements);
 
 /**
  * @swagger
@@ -133,7 +134,7 @@ router.get('/stock', authMiddleware, contractorGuard, allowPermissions('inventor
  *       201:
  *         description: Movement recorded and stock updated
  */
-router.post('/stock/movement', authMiddleware, contractorGuard, allowPermissions('inventory.stock.manage'), controller.processMovement);
+router.post('/stock/movement', authMiddleware, contractorGuard, allowPermissions('inventory.manage'), controller.processMovement);
 
 
 // --- Warehouses ---
@@ -149,7 +150,7 @@ router.post('/stock/movement', authMiddleware, contractorGuard, allowPermissions
  *       200:
  *         description: List of warehouses
  */
-router.get('/warehouses', authMiddleware, contractorGuard, allowPermissions('inventory.warehouses.view'), controller.getAllWarehouses);
+router.get('/warehouses', authMiddleware, contractorGuard, allowPermissions(['inventory.view', 'inventory.manage']), controller.getAllWarehouses);
 
 /**
  * @swagger
@@ -172,6 +173,6 @@ router.get('/warehouses', authMiddleware, contractorGuard, allowPermissions('inv
  *       201:
  *         description: Warehouse created
  */
-router.post('/warehouses', authMiddleware, contractorGuard, allowPermissions('inventory.warehouses.create'), controller.createWarehouse);
+router.post('/warehouses', authMiddleware, contractorGuard, allowPermissions('inventory.manage'), controller.createWarehouse);
 
 export default router;

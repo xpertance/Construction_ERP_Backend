@@ -72,4 +72,9 @@ export class InventoryService {
     // 3. Record the historical movement
     return this.repository.recordMovement({ ...data, companyId });
   }
+
+  async getMovements(companyId: string) {
+    return this.repository.findAllMovements(companyId);
+  }
 }
+

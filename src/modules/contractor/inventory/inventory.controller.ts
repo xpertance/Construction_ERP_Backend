@@ -30,7 +30,7 @@ export class InventoryController {
     try {
       const validatedData = createInventoryItemSchema.parse(req.body);
       const data = await this.service.createItem(req.user!.company_id, validatedData);
-      sendResponse(res, 21, 'Inventory item created', data);
+      sendResponse(res, 201, 'Inventory item created', data);
     } catch (error) {
       next(error);
     }
@@ -96,4 +96,14 @@ export class InventoryController {
       next(error);
     }
   };
+
+  getMovements = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = await this.service.getMovements(req.user!.company_id);
+      sendResponse(res, 200, 'Stock movements fetched', data);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
+

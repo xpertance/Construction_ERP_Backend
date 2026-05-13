@@ -5,6 +5,7 @@ import { generateToken, generateRefreshToken, verifyRefreshToken } from '@utils/
 import { authRepository } from './auth.repository';
 import { 
   RegisterInput, 
+  RegisterSuperadminInput,
   LoginInput, 
   RefreshTokenInput, 
   ForgotPasswordInput, 
@@ -42,6 +43,42 @@ export class AuthService {
       refreshToken,
       user: this.sanitizeUser(user),
       company
+    };
+  }
+
+  async registerSuperadmin(data: RegisterSuperadminInput) {
+    const existingSuperAdmin = await authRepository.findSuperAdmin();
+    if (existingSuperAdmin) {
+      throw new AppError('A Superadmin account already exists.', 403);
+    }
+
+    const existingUser = await authRepository.findUserByEmail(data.email);
+    if (existingUser) {
+      throw new AppError('Email already in use', 400);
+    }
+
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    const { user } = await authRepository.createIndependentSuperadmin(
+      { 
+        email: data.email, 
+        password: hashedPassword, 
+        firstName: data.firstName, 
+        lastName: data.lastName 
+      },
+      { name: 'SUPERADMIN', permissions: ['*'] }
+    );
+
+    const tokenPayload = this.createTokenPayload(user);
+    const accessToken = generateToken(tokenPayload);
+    const refreshToken = generateRefreshToken(tokenPayload);
+
+    await authRepository.updateUser(user.id, { refreshToken });
+
+    return {
+      accessToken,
+      refreshToken,
+      user: this.sanitizeUser(user)
     };
   }
 
@@ -137,9 +174,10 @@ export class AuthService {
     return {
       id: user.id,
       email: user.email,
-      company_id: user.companyId,
-      erpType: user.company.erpType,
-      permissions: user.role?.permissions || []
+      company_id: user.companyId || null,
+      erpType: user.company?.erpType || 'PLATFORM_OWNER',
+      role: user.role?.name || 'USER',
+      permissions: Array.from(new Set([...(user.permissions || []), ...(user.role?.permissions || [])]))
     };
   }
 

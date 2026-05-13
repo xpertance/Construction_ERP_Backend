@@ -38,6 +38,15 @@ export class EstimationController {
     }
   };
 
+  updateEstimation = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const estimation = await this.estimationService.updateEstimation(req.params.id as string, req.user!.company_id, req.body);
+      sendResponse(res, 200, 'Estimation updated successfully', estimation);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   deleteEstimation = async (req: Request, res: Response, next: NextFunction) => {
     try {
       await this.estimationService.deleteEstimation(req.params.id as string, req.user!.company_id);
@@ -87,8 +96,28 @@ export class EstimationController {
 
   approveEstimation = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await this.estimationService.approveEstimation(req.params.id as string, req.user!.company_id);
+      const isSuperadmin = req.user!.permissions?.includes('*');
+      await this.estimationService.approveEstimation(req.params.id as string, req.user!.company_id, req.user!.id, isSuperadmin);
       sendResponse(res, 200, 'Estimation approved successfully');
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  requestApproval = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { designatedApproverId, notes } = req.body;
+      if (!designatedApproverId) {
+        throw new Error('Designated approver is required');
+      }
+      await this.estimationService.requestApproval(
+        req.params.id as string, 
+        req.user!.company_id,
+        req.user!.id,
+        designatedApproverId,
+        notes
+      );
+      sendResponse(res, 200, 'Approval requested successfully');
     } catch (error) {
       next(error);
     }
@@ -107,6 +136,28 @@ export class EstimationController {
     try {
       const newVersion = await this.estimationService.createNewVersion(req.params.id as string, req.user!.company_id);
       sendResponse(res, 201, 'New version created successfully', newVersion);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  pushToProcurement = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { versionId } = req.body;
+      if (!versionId) throw new Error('Version ID is required');
+      const data = await this.estimationService.pushToProcurement(req.params.id as string, versionId, req.user!.company_id, req.user!.id);
+      sendResponse(res, 201, 'Procurement request generated successfully from approved BOQ', data);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  checkInventory = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { versionId } = req.query;
+      if (!versionId) throw new Error('Version ID is required');
+      const data = await this.estimationService.checkInventoryForVersion(req.params.id as string, versionId as string, req.user!.company_id);
+      sendResponse(res, 200, 'Inventory check completed', data);
     } catch (error) {
       next(error);
     }

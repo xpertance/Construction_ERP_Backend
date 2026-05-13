@@ -47,6 +47,13 @@ export const registerDTOSchema = z.object({
   erpType: z.enum(['CONTRACTOR', 'BUILDER'])
 });
 
+export const registerSuperadminDTOSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+  firstName: z.string().min(2),
+  lastName: z.string().min(2)
+});
+
 export const loginDTOSchema = z.object({
   email: z.string().email(),
   password: z.string()
@@ -66,6 +73,7 @@ export const resetPasswordDTOSchema = z.object({
 });
 
 export type RegisterInput = z.infer<typeof registerDTOSchema>;
+export type RegisterSuperadminInput = z.infer<typeof registerSuperadminDTOSchema>;
 export type LoginInput = z.infer<typeof loginDTOSchema>;
 export type RefreshTokenInput = z.infer<typeof refreshTokenDTOSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordDTOSchema>;
