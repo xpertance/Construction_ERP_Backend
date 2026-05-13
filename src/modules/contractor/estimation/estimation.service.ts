@@ -52,7 +52,7 @@ export class EstimationService {
     const latestVersion = estimation.versions[0];
     
     // Safety check: ensure the item belongs to the latest version of this estimation
-    const item = latestVersion.items.find(i => i.id === itemId);
+    const item = latestVersion.items.find((i: any) => i.id === itemId);
     if (!item) throw new Error('Item not found in the current version of this estimation');
 
     if (latestVersion.status !== 'DRAFT' && latestVersion.status !== 'PENDING_APPROVAL') {
@@ -68,7 +68,7 @@ export class EstimationService {
     const estimation = await this.getEstimationById(estimationId, companyId);
     const latestVersion = estimation.versions[0];
     
-    const item = latestVersion.items.find(i => i.id === itemId);
+    const item = latestVersion.items.find((i: any) => i.id === itemId);
     if (!item) throw new Error('Item not found in the current version of this estimation');
 
     if (latestVersion.status !== 'DRAFT' && latestVersion.status !== 'PENDING_APPROVAL') {
@@ -136,7 +136,7 @@ export class EstimationService {
 
   async pushToProcurement(id: string, versionId: string, companyId: string, userId: string) {
     const estimation = await this.getEstimationById(id, companyId);
-    const version = estimation.versions.find(v => v.id === versionId);
+    const version = estimation.versions.find((v: any) => v.id === versionId);
     if (!version) throw new Error('Version not found');
 
     if (version.status !== 'APPROVED') {
@@ -148,7 +148,7 @@ export class EstimationService {
 
   async checkInventoryForVersion(id: string, versionId: string, companyId: string) {
     const estimation = await this.getEstimationById(id, companyId);
-    const version = estimation.versions.find(v => v.id === versionId);
+    const version = estimation.versions.find((v: any) => v.id === versionId);
     if (!version) throw new Error('Version not found');
 
     return this.estimationRepository.checkInventoryForVersion(version, companyId);
