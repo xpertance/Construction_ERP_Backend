@@ -12,4 +12,12 @@ const envSchema = z.object({
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
 });
 
-export const env = envSchema.parse(process.env);
+let validatedEnv;
+try {
+  validatedEnv = envSchema.parse(process.env);
+} catch (error: any) {
+  console.error('❌ Environment Validation Error:', JSON.stringify(error.errors, null, 2));
+  throw error;
+}
+
+export const env = validatedEnv!;

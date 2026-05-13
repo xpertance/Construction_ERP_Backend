@@ -1,3 +1,4 @@
+// @ts-ignore
 import 'module-alias/register';
 import express, { Application } from 'express';
 import cors from 'cors';
