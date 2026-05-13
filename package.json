@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node -r tsconfig-paths/register dist/server.js",
+    "start": "node dist/server.js",
     "dev": "nodemon src/server.ts",
     "build": "npx prisma generate && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
     "db:migrate": "npx prisma migrate dev",
@@ -13,6 +13,13 @@
     "db:studio": "npx prisma studio"
   },
   "keywords": [],
+  "_moduleAliases": {
+    "@modules": "dist/modules",
+    "@routes": "dist/routes",
+    "@middleware": "dist/middleware",
+    "@config": "dist/config",
+    "@utils": "dist/utils"
+  },
   "author": "",
   "license": "ISC",
   "type": "commonjs",
@@ -27,6 +34,7 @@
     "express-rate-limit": "^8.3.2",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
+    "module-alias": "^2.2.3",
     "pg": "^8.20.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
