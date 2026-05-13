@@ -1,6 +1,5 @@
 import { prisma } from '@config/prisma.config';
 import { CompanyStatus } from './company.types';
-import { Prisma } from '@prisma/client';
 
 export class CompanyRepository {
   async getAllCompanies(

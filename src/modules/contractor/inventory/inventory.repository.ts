@@ -31,7 +31,7 @@ export class InventoryRepository {
   }
 
   async deleteItem(id: string, companyId: string) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: any) => {
       // 1. Delete associated stocks
       await (tx as any).stock.deleteMany({
         where: { inventoryItemId: id, companyId }
