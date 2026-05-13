@@ -38,16 +38,16 @@ export class AuthRepository {
     });
   }
 
-  async createUser(data: Prisma.UserCreateInput) {
-    return prisma.user.create({ data, include: { company: true } });
+  async createUser(data: any) {
+    return (prisma as any).user.create({ data, include: { company: true } });
   }
 
-  async updateUser(id: string, data: Prisma.UserUpdateInput) {
-    return prisma.user.update({ where: { id }, data });
+  async updateUser(id: string, data: any) {
+    return (prisma as any).user.update({ where: { id }, data });
   }
 
   async createCompanyWithAdmin(companyData: any, userData: any, roleData: any) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: any) => {
       const company = await tx.company.create({ data: companyData });
       const role = await tx.role.create({
         data: {
@@ -68,7 +68,7 @@ export class AuthRepository {
   }
 
   async createIndependentSuperadmin(userData: any, roleData: any) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: any) => {
       const role = await tx.role.create({
         data: roleData
       });

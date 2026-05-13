@@ -8,7 +8,7 @@ export class CompanyRepository {
     skip?: number,
     take?: number
   ) {
-    const where: Prisma.CompanyWhereInput = {};
+    const where: any = {};
 
     if (status) {
       where.status = status;

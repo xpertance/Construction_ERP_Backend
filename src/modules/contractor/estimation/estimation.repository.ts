@@ -64,10 +64,10 @@ export class EstimationRepository {
     const estimation = await prisma.estimation.findFirst({ where: { id, companyId } });
     if (!estimation) throw new Error('Estimation not found or unauthorized');
 
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: any) => {
       // 1. Get all version IDs for this estimation
       const versions = await tx.estimationVersion.findMany({ where: { estimationId: id } });
-      const versionIds = versions.map(v => v.id);
+      const versionIds = versions.map((v: any) => v.id);
 
       // 2. Delete all items belonging to these versions
       if (versionIds.length > 0) {
@@ -172,7 +172,7 @@ export class EstimationRepository {
         totalAmount: prevVersion.totalAmount,
         status: 'DRAFT',
         items: {
-          create: prevVersion.items.map(item => ({
+          create: prevVersion.items.map((item: any) => ({
             description: item.description,
             quantity: item.quantity,
             unit: item.unit,
@@ -198,7 +198,7 @@ export class EstimationRepository {
     const items = await prisma.estimationItem.findMany({
       where: { estimationVersionId: versionId },
     });
-    const total = items.reduce((sum, item) => sum + item.amount, 0);
+    const total = items.reduce((sum: number, item: any) => sum + item.amount, 0);
     
     return prisma.estimationVersion.update({
       where: { id: versionId },
