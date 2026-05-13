@@ -1,12 +1,13 @@
+import 'module-alias/register';
 import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 
-import { swaggerSpec } from '@config/swagger.config';
-import { errorHandler } from '@middleware/error.middleware';
-import routes from '@routes/index';
+import { swaggerSpec } from './config/swagger.config';
+import { errorHandler } from './middleware/error.middleware';
+import routes from './routes/index';
 
 const app: Application = express();
 
