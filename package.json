@@ -14,11 +14,11 @@
   },
   "keywords": [],
   "_moduleAliases": {
-    "@modules": "dist/modules",
-    "@routes": "dist/routes",
-    "@middleware": "dist/middleware",
-    "@config": "dist/config",
-    "@utils": "dist/utils"
+    "@modules": "src/modules",
+    "@routes": "src/routes",
+    "@middleware": "src/middleware",
+    "@config": "src/config",
+    "@utils": "src/utils"
   },
   "author": "",
   "license": "ISC",
