@@ -1,4 +1,4 @@
-import { prisma } from '@config/prisma.config';
+import { prisma } from '../../../config/prisma.config';
 import { CreateProcurementRequestDTO, CreatePurchaseOrderDTO, UpdateProcurementRequestDTO, UpdatePurchaseOrderDTO } from './procurement.dto';
 
 export class ProcurementRepository {

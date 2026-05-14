@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { InventoryService } from './inventory.service';
-import { sendResponse } from '@utils/response.util';
+import { sendResponse } from '../../../utils/response.util';
 import { 
   createInventoryItemSchema, 
   updateInventoryItemSchema, 

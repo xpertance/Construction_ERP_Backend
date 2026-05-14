@@ -1,8 +1,8 @@
 import express from 'express';
 import { FinanceController } from './finance.controller';
-import { authMiddleware } from '@middleware/auth.middleware';
-import { checkERPType } from '@middleware/erp.middleware';
-import { allowPermissions } from '@middleware/rbac.middleware';
+import { authMiddleware } from '../../../middleware/auth.middleware';
+import { checkERPType } from '../../../middleware/erp.middleware';
+import { allowPermissions } from '../../../middleware/rbac.middleware';
 
 const router = express.Router();
 const controller = new FinanceController();
@@ -189,7 +189,7 @@ router.post('/payments', authMiddleware, contractorGuard, allowPermissions('fina
 router.get('/reports/summary', authMiddleware, contractorGuard, allowPermissions(['finance.view', 'finance.manage']), async (req: any, res, next) => {
   try {
     const companyId = req.user!.company_id;
-    const { prisma } = require('@config/prisma.config');
+    const { prisma } = require('../../../config/prisma.config');
 
     // Fetch all core data in parallel
     const [invoices, transactions, payments, projects] = await Promise.all([

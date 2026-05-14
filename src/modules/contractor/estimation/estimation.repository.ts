@@ -1,4 +1,4 @@
-import { prisma } from '@config/prisma.config';
+import { prisma } from '../../../config/prisma.config';
 import { CreateEstimationDTO, AddEstimationItemDTO, UpdateEstimationItemDTO } from './estimation.dto';
 
 export class EstimationRepository {

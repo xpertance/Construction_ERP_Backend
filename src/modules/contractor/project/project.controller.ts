@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ProjectService } from './project.service';
-import { sendResponse } from '@utils/response.util';
+import { sendResponse } from '../../../utils/response.util';
 import { createProjectSchema, updateProjectSchema, addMemberSchema, updateProgressSchema } from './project.dto';
 
 export class ProjectController {

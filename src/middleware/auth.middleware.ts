@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt.util';
 import { AppError } from './error.middleware';
-import { prisma } from '@config/prisma.config';
+import { prisma } from '../config/prisma.config';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

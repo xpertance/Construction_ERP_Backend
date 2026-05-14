@@ -1,4 +1,4 @@
-import { prisma } from '@config/prisma.config';
+import { prisma } from '../../config/prisma.config';
 import { CompanyStatus } from './company.types';
 
 export class CompanyRepository {

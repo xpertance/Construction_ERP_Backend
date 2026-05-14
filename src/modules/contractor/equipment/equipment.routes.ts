@@ -1,7 +1,7 @@
 import express from 'express';
 import { EquipmentService } from './equipment.service';
-import { authMiddleware } from '@middleware/auth.middleware';
-import { checkERPType } from '@middleware/erp.middleware';
+import { authMiddleware } from '../../../middleware/auth.middleware';
+import { checkERPType } from '../../../middleware/erp.middleware';
 
 const router = express.Router();
 const service = new EquipmentService();
@@ -134,7 +134,7 @@ router.post('/:id/fuel', async (req: any, res) => {
 // ─── Depreciation Report ───
 router.get('/depreciation/report', async (req: any, res) => {
   try {
-    const { prisma } = require('@config/prisma.config');
+    const { prisma } = require('../../../config/prisma.config');
     const ownedEquipment = await (prisma as any).equipment.findMany({
       where: { companyId: req.user.company_id, ownership: 'OWNED', purchaseCost: { gt: 0 } }
     });

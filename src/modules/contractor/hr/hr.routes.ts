@@ -1,7 +1,7 @@
 import express from 'express';
 import { LabourService } from './hr.service';
-import { authMiddleware } from '@middleware/auth.middleware';
-import { checkERPType } from '@middleware/erp.middleware';
+import { authMiddleware } from '../../../middleware/auth.middleware';
+import { checkERPType } from '../../../middleware/erp.middleware';
 
 const router = express.Router();
 const service = new LabourService();
@@ -223,7 +223,7 @@ router.post('/attendance/upload', async (req: any, res) => {
     const totalWage = matched.reduce((s, m) => s + m.wageAmount, 0);
 
     // Save upload record for audit trail
-    const { prisma } = require('@config/prisma.config');
+    const { prisma } = require('../../../config/prisma.config');
     await (prisma as any).attendanceUpload.create({
       data: {
         companyId,
@@ -256,7 +256,7 @@ router.post('/attendance/upload', async (req: any, res) => {
 // Upload history
 router.get('/attendance/uploads', async (req: any, res) => {
   try {
-    const { prisma } = require('@config/prisma.config');
+    const { prisma } = require('../../../config/prisma.config');
     const uploads = await (prisma as any).attendanceUpload.findMany({
       where: { companyId: req.user.company_id },
       include: { project: { select: { name: true } } },
