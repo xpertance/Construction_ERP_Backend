@@ -1,4 +1,4 @@
-import { prisma } from '@config/prisma.config';
+import { prisma } from '../../../config/prisma.config';
 import { CreateInventoryItemDTO, UpdateInventoryItemDTO, CreateWarehouseDTO, StockMovementDTO } from './inventory.dto';
 
 export class InventoryRepository {

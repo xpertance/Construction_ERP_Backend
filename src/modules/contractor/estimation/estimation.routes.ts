@@ -1,8 +1,8 @@
 import express from 'express';
 import { EstimationController } from './estimation.controller';
-import { authMiddleware } from '@middleware/auth.middleware';
-import { checkERPType } from '@middleware/erp.middleware';
-import { allowPermissions } from '@middleware/rbac.middleware';
+import { authMiddleware } from '../../../middleware/auth.middleware';
+import { checkERPType } from '../../../middleware/erp.middleware';
+import { allowPermissions } from '../../../middleware/rbac.middleware';
 
 const router = express.Router();
 const controller = new EstimationController();

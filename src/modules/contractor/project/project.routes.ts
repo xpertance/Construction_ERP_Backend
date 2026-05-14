@@ -1,9 +1,9 @@
 import express from 'express';
 import { ProjectController } from './project.controller';
 import { TaskController } from './task.controller';
-import { authMiddleware } from '@middleware/auth.middleware';
-import { checkERPType } from '@middleware/erp.middleware';
-import { allowPermissions } from '@middleware/rbac.middleware';
+import { authMiddleware } from '../../../middleware/auth.middleware';
+import { checkERPType } from '../../../middleware/erp.middleware';
+import { allowPermissions } from '../../../middleware/rbac.middleware';
 
 const router = express.Router();
 const controller = new ProjectController();
@@ -281,7 +281,7 @@ router.get('/:id/financials', authMiddleware, contractorGuard, allowPermissions(
   try {
     const projectId = req.params.id;
     const companyId = req.user.company_id;
-    const { prisma } = require('@config/prisma.config');
+    const { prisma } = require('../../../config/prisma.config');
 
     // Fetch project with budget
     const project = await (prisma as any).project.findFirst({

@@ -5,8 +5,8 @@ import {
   rejectCompany,
   updateStatus,
 } from './company.controller';
-import { authMiddleware } from '@middleware/auth.middleware';
-import { authorizeRole } from '@middleware/rbac.middleware';
+import { authMiddleware } from '../../middleware/auth.middleware';
+import { authorizeRole } from '../../middleware/rbac.middleware';
 
 const router = express.Router();
 

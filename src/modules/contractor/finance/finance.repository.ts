@@ -1,4 +1,4 @@
-import { prisma } from '@config/prisma.config';
+import { prisma } from '../../../config/prisma.config';
 import { CreateInvoiceDTO, UpdateInvoiceDTO, CreateTransactionDTO, CreatePaymentDTO } from './finance.dto';
 
 export class FinanceRepository {

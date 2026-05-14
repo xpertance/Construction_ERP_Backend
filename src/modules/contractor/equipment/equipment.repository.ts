@@ -1,4 +1,4 @@
-import { prisma } from '@config/prisma.config';
+import { prisma } from '../../../config/prisma.config';
 
 export class EquipmentRepository {
   async findAll(companyId: string, filters?: { projectId?: string; status?: string; type?: string }) {
