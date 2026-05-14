@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { sendResponse } from '@utils/response.util';
+import { sendResponse } from '../../utils/response.util';
 import { authService } from './auth.service';
 import { 
   registerDTOSchema, 
