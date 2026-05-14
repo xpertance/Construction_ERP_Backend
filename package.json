@@ -10,7 +10,8 @@
     "build": "npx prisma generate && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
     "db:migrate": "npx prisma migrate dev",
     "db:generate": "npx prisma generate",
-    "db:studio": "npx prisma studio"
+    "db:studio": "npx prisma studio",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "_moduleAliases": {
