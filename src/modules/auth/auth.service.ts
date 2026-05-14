@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { AppError } from '../../middlewares/error.middleware';
+import { AppError } from '../../middleware/error.middleware';
 import { generateToken, generateRefreshToken, verifyRefreshToken } from '../../utils/jwt.util';
 import { authRepository } from './auth.repository';
 import { 
