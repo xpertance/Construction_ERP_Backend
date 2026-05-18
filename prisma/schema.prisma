@@ -98,6 +98,7 @@ model Project {
   status              String               @default("PLANNED")
   budget              Float?
   area                Float?               // Total area in sq.ft for cost/sq.ft calculation
+  clientName          String?              // Client or owner name for this project
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   companyId           String
